@@ -16,10 +16,10 @@ var DragScroll = /** @class */ (function () {
     function DragScroll(element) {
         var _this = this;
         this.element = element;
-        this.isDragging = false;
-        this.isClick = false;
         this.noChildDrag = false;
         this.firstChildDrag = false;
+        this.isDragging = false;
+        this.isClick = false;
         this.md = function (e) {
             e.preventDefault();
             var isMouseEvent = e instanceof window.MouseEvent;
@@ -57,7 +57,8 @@ var DragScroll = /** @class */ (function () {
         };
         this.mm = function (e) {
             var isMouseEvent = e instanceof window.MouseEvent;
-            var newScrollX, newScrollY;
+            var newScrollX;
+            var newScrollY;
             var eventDetail = {};
             if (_this.pushed) {
                 if (!_this.isDragging) {
@@ -127,8 +128,6 @@ var DragScroll = /** @class */ (function () {
             var moveEvent = POINTER_MOVE_EVENTS_2[_b];
             this.element.removeEventListener(moveEvent, this.mm);
         }
-    };
-    DragScroll.prototype.reset = function () {
     };
     DragScroll.inject = [Element];
     __decorate([

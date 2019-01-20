@@ -26,10 +26,10 @@ System.register(["aurelia-templating"], function (exports_1, context_1) {
                 function DragScroll(element) {
                     var _this = this;
                     this.element = element;
-                    this.isDragging = false;
-                    this.isClick = false;
                     this.noChildDrag = false;
                     this.firstChildDrag = false;
+                    this.isDragging = false;
+                    this.isClick = false;
                     this.md = function (e) {
                         e.preventDefault();
                         var isMouseEvent = e instanceof window.MouseEvent;
@@ -67,7 +67,8 @@ System.register(["aurelia-templating"], function (exports_1, context_1) {
                     };
                     this.mm = function (e) {
                         var isMouseEvent = e instanceof window.MouseEvent;
-                        var newScrollX, newScrollY;
+                        var newScrollX;
+                        var newScrollY;
                         var eventDetail = {};
                         if (_this.pushed) {
                             if (!_this.isDragging) {
@@ -137,8 +138,6 @@ System.register(["aurelia-templating"], function (exports_1, context_1) {
                         var moveEvent = POINTER_MOVE_EVENTS_2[_b];
                         this.element.removeEventListener(moveEvent, this.mm);
                     }
-                };
-                DragScroll.prototype.reset = function () {
                 };
                 DragScroll.inject = [Element];
                 __decorate([
