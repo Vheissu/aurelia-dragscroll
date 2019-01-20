@@ -7,23 +7,23 @@ const POINTER_END_EVENTS = ['mouseup', 'touchend'];
 
 @customAttribute('dragscroll')
 export class DragScroll {
+    private static inject = [Element];
+
+    @bindable public noChildDrag = false;
+    @bindable public firstChildDrag = false;
+    @bindable public x;
+    @bindable public y;
+    @bindable public pass;
+
     private lastClientX;
     private lastClientY;
     private pushed;
     private isDragging = false;
     private isClick = false;
 
-    @bindable noChildDrag = false;
-    @bindable firstChildDrag = false;
-    @bindable x;
-    @bindable y;
-    @bindable pass;
-
-    static inject = [Element];
-
     constructor(private element: Element) { }
 
-    attached() {
+    private attached() {
         for (const startEvent of POINTER_START_EVENTS) {
             this.element.addEventListener(startEvent, this.md);
         }
@@ -37,7 +37,7 @@ export class DragScroll {
         }
     }
 
-    detached() {
+    private detached() {
         for (const startEvent of POINTER_START_EVENTS) {
             this.element.removeEventListener(startEvent, this.md);
         }
@@ -51,25 +51,22 @@ export class DragScroll {
         }
     }
 
-    reset() {
+    private md = (e) => {
+        e.preventDefault();
 
-    }
-
-    md = (e) => {
-        e.preventDefault()
-        let isMouseEvent = e instanceof (window as any).MouseEvent;
+        const isMouseEvent = e instanceof (window as any).MouseEvent;
 
         // The coordinates of the mouse pointer compared to the page when the mouse button is clicked on an element
-        let pageX = isMouseEvent ? e.pageX : e.touches[0].pageX;
-        let pageY = isMouseEvent ? e.pageY : e.touches[0].pageY;
+        const pageX = isMouseEvent ? e.pageX : e.touches[0].pageX;
+        const pageY = isMouseEvent ? e.pageY : e.touches[0].pageY;
 
-        let clickedElement = document.elementFromPoint(pageX - window.pageXOffset, pageY - window.pageYOffset) as HTMLElement;
+        const clickedElement = document.elementFromPoint(pageX - window.pageXOffset, pageY - window.pageYOffset) as HTMLElement;
 
-        let hasNoChildDrag = this.noChildDrag;
-        let hasFirstChildDrag = this.firstChildDrag;
-        let isEl = clickedElement === this.element;
-        let isFirstChild = clickedElement === this.element.firstChild;
-        let isDataDraggable = hasNoChildDrag ? typeof clickedElement.dataset.dragscroll !== 'undefined' : typeof clickedElement.dataset.noDragscroll === 'undefined';
+        const hasNoChildDrag = this.noChildDrag;
+        const hasFirstChildDrag = this.firstChildDrag;
+        const isEl = clickedElement === this.element;
+        const isFirstChild = clickedElement === this.element.firstChild;
+        const isDataDraggable = hasNoChildDrag ? typeof clickedElement.dataset.dragscroll !== 'undefined' : typeof clickedElement.dataset.noDragscroll === 'undefined';
 
         if (!isEl && (!isDataDraggable || (hasFirstChildDrag && !isFirstChild))) {
             return;
@@ -85,7 +82,7 @@ export class DragScroll {
         }
     }
 
-    mu = (e) => {
+    private mu = (e) => {
         this.pushed = 0;
 
         if (this.isDragging) {
@@ -102,10 +99,11 @@ export class DragScroll {
         }
     }
 
-    mm = (e) => {
-        let isMouseEvent = e instanceof (window as any).MouseEvent;
-        let newScrollX, newScrollY;
-        let eventDetail: any = {};
+    private mm = (e) => {
+        const isMouseEvent = e instanceof (window as any).MouseEvent;
+        let newScrollX;
+        let newScrollY;
+        const eventDetail: any = {};
 
         if (this.pushed) {
             if (!this.isDragging) {
@@ -115,8 +113,8 @@ export class DragScroll {
             this.isDragging = true;
 
             // when we reach the end or the begining of X or Y
-            let isEndX = ((this.element.scrollLeft + this.element.clientWidth) >= this.element.scrollWidth) || this.element.scrollLeft === 0;
-            let isEndY = ((this.element.scrollTop + this.element.clientHeight) >= this.element.scrollHeight) || this.element.scrollTop === 0;
+            const isEndX = ((this.element.scrollLeft + this.element.clientWidth) >= this.element.scrollWidth) || this.element.scrollLeft === 0;
+            const isEndY = ((this.element.scrollTop + this.element.clientHeight) >= this.element.scrollHeight) || this.element.scrollTop === 0;
 
             // get new scroll dimentions
             newScrollX = (-this.lastClientX + (this.lastClientX = isMouseEvent ? e.clientX : e.touches[0].clientX));
